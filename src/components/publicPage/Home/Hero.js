@@ -8,6 +8,7 @@ import {
     Text,
     Button,
   } from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
 import Carrousel from './Carrousel'
 
 const Hero = () => {
@@ -21,6 +22,7 @@ const Hero = () => {
         m={'0 5%'}>
         <Stack flex={1} spacing={{ base: 5, md: 10 }}>
           <Heading
+            textAlign={{ base: "center", sm: "left" }}
             lineHeight={1.1}
             fontWeight={600}
             fontSize={{ base: '3xl', sm: '4xl', lg: '6xl' }}>
@@ -45,7 +47,7 @@ const Hero = () => {
               a crear sonrisas
             </Text>
           </Heading>
-          <Text color={'gray.500'}>
+          <Text color={'gray.500'} textAlign={{ base: "center", sm: "left" }}>
             Pertenecemos a "Dona Cabellos Corrientes". 
             Nuestra misión es llevar una sonrisa a aquellos que por procesos médicos han perdido su cabello.
           </Text>
@@ -53,6 +55,8 @@ const Hero = () => {
             spacing={{ base: 4, sm: 6 }}
             direction={{ base: 'column', sm: 'row' }}>
             <Button
+              as={Link}
+              to='/sumate'
               size={'lg'}
               fontWeight={'normal'}
               px={6}
@@ -60,18 +64,20 @@ const Hero = () => {
               color={'#FFF1A1'}
               bg={'#1AABE3'}
               _hover={{
-                opacity: 0.8
+                opacity: 0.8,
                 }}>
               Sumate
             </Button>
             <Button
+              as={Link}
+              to='/nosotros'
               size={'lg'}
               fontWeight={'normal'}
               px={6}
               color={'#866D34'}
               bg={'#FFF1A1'}
               _hover={{
-                opacity: 0.8
+                opacity: 0.8,
                 }}>
               Conocenos
             </Button>

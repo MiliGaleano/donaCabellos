@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     Box,
     Flex,
@@ -12,22 +12,25 @@ import {
     PopoverTrigger,
     useColorModeValue,
     useDisclosure,
-  } from '@chakra-ui/react';
+  } from '@chakra-ui/react'
   import {
     HamburgerIcon,
     CloseIcon
   } from '@chakra-ui/icons';
   import LogoDona from '../../assets/donacabellos-01.png'
   import { NavLink } from 'react-router-dom'
+  import app from "../../config/Firebase"
+  import { Auth } from "../../context/authContext"
 
 const Header = () => {
-    const { isOpen, onToggle } = useDisclosure();
-
+    const { isOpen, onToggle } = useDisclosure()
+    const { usuario } = useContext(Auth)
+    
     return (
         <Box>
         <Flex
             bg={useColorModeValue('white', 'gray.800')}
-            color={'#FFF1A1'}
+            color={'#866D34'}
             minH={'60px'}
             py={{ base: 2 }}
             px={{ base: 4 }}
@@ -64,28 +67,27 @@ const Header = () => {
             justify={'flex-end'}
             direction={'row'}
             spacing={6}>
-            <Button
-                as={'a'}
-                fontSize={'sm'}
-                fontWeight={400}
-                variant={'link'}
-                href={'#'}
-                color={'#866D34'}>
-                Sign In
-            </Button>
-            <Button
-                display={{ base: 'none', md: 'inline-flex' }}
+            { !usuario ?
+              <Button
+                as={NavLink}
                 fontSize={'sm'}
                 fontWeight={600}
-                color={'#866D34'}
-                bg={'#FFF1A1'}
-                href={'#'}
-                _hover={{
-                bg: '#866D34',
-                color: '#FFF1A1'
-                }}>
-                Ingresar
-            </Button>
+                color={'#D82723'}
+                variant={'link'}
+                to={'/login'}
+                >
+              Ingresar
+              </Button>
+              : <Button 
+              onClick={() => app.auth().signOut()} 
+              fontSize={'sm'}
+              fontWeight={600}
+              color={'#D82723'}
+              variant={'link'} 
+              >
+              Salir
+              </Button>
+            }
             </Stack>
         </Flex>
 
@@ -101,6 +103,8 @@ const linkColor = '#866D34'
 const linkHoverColor = '#FFF1A1'
 
 const DesktopNav = () => {
+  const { usuario } = useContext(Auth)
+
     return (
       <Stack direction={'row'} spacing={4}>
       {NavItems.map((navItem) => (
@@ -108,7 +112,8 @@ const DesktopNav = () => {
             <Popover trigger={'hover'} placement={'bottom-start'}>
               <PopoverTrigger>
                 <Link as={NavLink}
-                  p={2}
+                  p={'2px'}
+                  m={2}
                   to={navItem.link}
                   fontSize={'sm'}
                   fontWeight={500}
@@ -119,10 +124,39 @@ const DesktopNav = () => {
                     color: linkHoverColor,
                   }}
                   activeStyle={{
-                    color: linkHoverColor
+                    color: '#D82723',
+                    borderBottom: `2px solid ${linkHoverColor}`
                   }}
                   >
                   {navItem.label}
+                </Link>
+              </PopoverTrigger>
+            </Popover>
+          </Box>
+        ))}
+        { usuario &&
+        NavItemsBack.map((navItemBack) => (
+          <Box key={navItemBack.label}>
+            <Popover trigger={'hover'} placement={'bottom-start'}>
+              <PopoverTrigger>
+                <Link as={NavLink}
+                  p={'2px'}
+                  m={2}
+                  to={navItemBack.link}
+                  fontSize={'sm'}
+                  fontWeight={500}
+                  color={linkColor}
+                  outline= 'none'
+                  _hover={{
+                    textDecoration: 'none',
+                    color: linkHoverColor,
+                  }}
+                  activeStyle={{
+                    color: '#D82723',
+                    borderBottom: `2px solid ${linkHoverColor}`
+                  }}
+                  >
+                  {navItemBack.label}
                 </Link>
               </PopoverTrigger>
             </Popover>
@@ -133,6 +167,8 @@ const DesktopNav = () => {
   }
   
   const MobileNav = () => {
+    const { usuario } = useContext(Auth)
+
     return (
       <Stack
         bg={useColorModeValue('white', 'gray.800')}
@@ -140,6 +176,10 @@ const DesktopNav = () => {
         display={{ md: 'none' }}>
         {NavItems.map((navItem) => (
           <MobileNavItem key={navItem.label} {...navItem} />
+        ))}
+        { usuario &&
+        NavItemsBack.map((navItemBack) => (
+          <MobileNavItem key={navItemBack.label} {...navItemBack} />
         ))}
       </Stack>
     )
@@ -167,7 +207,8 @@ const DesktopNav = () => {
                     color: linkHoverColor,
                   }}
                   activeStyle={{
-                    color: linkHoverColor
+                    color: '#D82723',
+                    borderBottom: '2px solid #D82723'
                   }}>
             {NavItem.label}
           </Link>
@@ -189,4 +230,13 @@ const DesktopNav = () => {
     {label:'Contacto',
      link:'/contacto'
     },
+  ]
+
+  const NavItemsBack= [
+    {label:'+ Donante',
+     link:'/backoffice/donantes'
+    },
+    {label:'+ Novedad',
+     link:'/backoffice/novedades'
+    }
   ]
